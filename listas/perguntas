@@ -1,0 +1,14 @@
+1. (Valor: 0,2) Crie um vetor de 10 números inteiros. Preencha-o com valores fornecidos pelo
+usuário e exiba a soma de todos os elementos.
+
+2. (Valor: 0,2) Preencha um vetor de 10 números inteiros e exiba apenas os valores que aparecem
+uma única vez (valores não repetidos).
+
+3. (Valor: 0,2) Leia duas matrizes 2x2 de números inteiros e exiba a matriz resultante da soma das
+duas.
+
+4. (Valor: 0,2) Preencha uma matriz 3x3 e leia um número. Verifique se o número está presente na
+matriz, indicando a posição (linha e coluna) em que ele foi encontrado.
+
+5. (Valor: 0,2) Preencha uma matriz 4x4 e exiba a soma dos elementos das bordas (primeira e
+última linhas e colunas).
