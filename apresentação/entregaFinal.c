@@ -1,148 +1,80 @@
 #include <stdio.h>
-#include <string.h>
 #include <locale.h>
+#include <string.h>
 #include <stdlib.h>
+#include "carrinho.h"
 
-#define MAX_PRODUTOS 50
-
-typedef struct {
-    char nome[50];
-    float precoPorKg, peso, valorTotal;
-} Produto;
-
-int autenticar(const char* esperado, const char* mensagem) {
-    char entrada[50];
-    printf("%s", mensagem);
-    fgets(entrada, sizeof(entrada), stdin);
-    entrada[strcspn(entrada, "\n")] = 0;
-    return strcmp(entrada, esperado) == 0;
-}
-
-void adicionarProduto(Produto* carrinho, int* numProdutos, float* totalCompra, int tipo) {
-    Produto produtoTemp;
-    if (*numProdutos >= MAX_PRODUTOS) {
-        printf("Carrinho cheio. Não é possível adicionar mais produtos.\n");
-        return;
-    }
-
-    printf("Digite o nome do produto: ");
-    fgets(produtoTemp.nome, sizeof(produtoTemp.nome), stdin);
-    produtoTemp.nome[strcspn(produtoTemp.nome, "\n")] = 0;
-
-    if (tipo == 1) { // Produto normal
-        printf("Digite o valor do produto: ");
-        if (scanf("%f", &produtoTemp.valorTotal) != 1 || produtoTemp.valorTotal <= 0) {
-            printf("Valor inválido. Tente novamente.\n");
-            while (getchar() != '\n');
-            return;
-        }
-        produtoTemp.precoPorKg = 0;
-        produtoTemp.peso = 0;
-    } else if (tipo == 2) { // Hortifruti
-        printf("Digite o preço por quilo: ");
-        if (scanf("%f", &produtoTemp.precoPorKg) != 1 || produtoTemp.precoPorKg <= 0) {
-            printf("Preço por quilo inválido. Tente novamente.\n");
-            while (getchar() != '\n');
-            return;
-        }
-
-        printf("Digite o peso do produto (em kg): ");
-        if (scanf("%f", &produtoTemp.peso) != 1 || produtoTemp.peso <= 0) {
-            printf("Peso inválido. Tente novamente.\n");
-            while (getchar() != '\n');
-            return;
-        }
-        produtoTemp.valorTotal = produtoTemp.precoPorKg * produtoTemp.peso;
-    }
-
-    *totalCompra += produtoTemp.valorTotal;
-    carrinho[*numProdutos] = produtoTemp;
-    (*numProdutos)++;
-    printf("Produto '%s' adicionado ao carrinho. Total atual: R$%.2f\n", produtoTemp.nome, *totalCompra);
-}
-
-void verCarrinho(Produto* carrinho, int numProdutos, float totalCompra) {
-    printf("\nCarrinho de compras:\n");
-    for (int i = 0; i < numProdutos; i++) {
-        printf("Produto %d: %s - ", i + 1, carrinho[i].nome);
-        if (carrinho[i].peso > 0)
-            printf("Peso: %.2f kg, Preço por kg: R$%.2f, Total: R$%.2f\n", carrinho[i].peso, carrinho[i].precoPorKg, carrinho[i].valorTotal);
-        else
-            printf("Total: R$%.2f\n", carrinho[i].valorTotal);
-    }
-    printf("Total da compra até agora: R$%.2f\n", totalCompra);
-}
-
-void finalizarCompra(float totalCompra) {
-    float valorPago, troco;
-
-    printf("Total da compra: R$%.2f\n", totalCompra);
-    printf("Digite o valor pago pelo cliente: ");
-    if (scanf("%f", &valorPago) != 1 || valorPago < totalCompra) {
-        printf("Valor pago insuficiente ou inválido. Compra não finalizada.\n");
-        while (getchar() != '\n');
-        return;
-    }
-
-    troco = valorPago - totalCompra;
-    printf("Troco: R$%.2f\n", troco);
-    printf("Compra realizada com sucesso.\n");
-}
-
+int auth(const char* esperado, const char* msg);
+void login(const char *user, const char *pass);
+void menu();
 int main() {
-    setlocale(LC_ALL, "");
+    setlocale(LC_ALL, ""); // Para aceitar acentos usando a localidade padrão do sistema
+    
+    const char *user = "adm";
+    const char *pass = "12345";
+    
+    login(user, pass);
+    menu();
 
-    const char *coUser = "adm";
-    const char *coPassword = "12345";
-    int tentativas = 3;
-    int escolha;
-    float totalCompra = 0;
-    Produto carrinho[MAX_PRODUTOS];
-    int numProdutos = 0;
+    return 0;
+}
 
-    // Autenticação com controle de tentativas
-    while (tentativas > 0) {
-        if (autenticar(coUser, "Usuário:\n") && autenticar(coPassword, "Senha:\n")) {
+int auth(const char* esperado, const char* msg) {
+    char input[50];
+    printf("%s", msg);
+    fgets(input, sizeof(input), stdin);
+    input[strcspn(input, "\n")] = 0;
+    return strcmp(input, esperado) == 0;
+}
+
+void login(const char *user, const char *pass) {
+    int tries = 3;
+
+    while (tries > 0) {
+        if (auth(user, "Usuário:\n") && auth(pass, "Senha:\n")) {
             printf("Bem-vindo!\n");
-            break;
+            return;
         }
-        tentativas--;
-        if (tentativas > 0) {
-            printf("Usuário ou senha incorretos! Tentativas restantes: %d\n", tentativas);
+        tries--;
+        if (tries > 0) {
+            printf("Usuário ou senha incorretos! Tentativas restantes: %d\n", tries);
         } else {
             printf("Número máximo de tentativas atingido.\n");
-            return 0;
+            exit(0);
         }
     }
+}
 
-    // Loop principal
+void menu() {
+    int opc;
+
     while (1) {
         printf("\nEscolha o tipo de produto:\n1. Produto normal\n2. Hortifruti\n3. Ver carrinho\n0. Finalizar\nDigite sua escolha: ");
-        if (scanf("%d", &escolha) != 1) {
+        
+        if (scanf("%d", &opc) != 1) {
             printf("Entrada inválida. Por favor, insira um número.\n");
-            while (getchar() != '\n'); // Limpa o buffer
+            while (getchar() != '\n');
             continue;
         }
-        getchar(); // Limpa o buffer
 
-        switch (escolha) {
+        while (getchar() != '\n');
+
+        switch (opc) {
             case 1:
-                adicionarProduto(carrinho, &numProdutos, &totalCompra, 1);
+                addProd();
                 break;
             case 2:
-                adicionarProduto(carrinho, &numProdutos, &totalCompra, 2);
+                addHorti();
                 break;
             case 3:
-                verCarrinho(carrinho, numProdutos, totalCompra);
+                showCarrinho();
                 break;
             case 0:
-                finalizarCompra(totalCompra);
-                return 0;
+                finalizar();
+                return;
             default:
                 printf("Escolha inválida. Por favor, selecione uma opção válida.\n");
                 break;
         }
     }
-
-    return 0;
 }
