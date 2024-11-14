@@ -1,12 +1,11 @@
 #include <stdio.h>
-#include <locale.h>
-#include <string.h>
-#include <stdlib.h>
+#include <locale.h> 
+#include <string.h> 
+#include <stdlib.h> 
 
 #define MAX 50 //para o carrinho
 
-typedef struct { 
-    //typedef- criar um novo nome (ou alias) tipo de dado existente. + struct, ele define uma nova estrutura com um nome mais simples e fácil de usar.
+typedef struct { //typedef- criar um novo nome (ou alias) tipo de dado existente. + struct, ele define uma nova estrutura com um nome mais simples e fácil de usar.
     char nome[50];
     float pKg, peso, total;
 } Prod;
@@ -16,23 +15,18 @@ int nProd = 0;
 float totalCompra = 0;
 
 int auth(const char* esperado, const char* msg);  //msg linha 56 e 57 (usuario e senha)
-void login(const char *user, const char *pass);
-//const:valor apontado não pode ser alterado.
-//char*: Um ponteiro para um caractere (string).
-//esperado: O nome do parâmetro. 
+void login(const char *user, const char *pass); //const:valor apontado não pode ser alterado. //char*: Um ponteiro para um caractere (string). //esperado: O nome do parâmetro.
 void menu(); //lin 95
 void addProd();
 void addHorti();
 void showCarrinho();
 void saveCarrinho();
-void finalizar();
-// void nao retorna nada, é o 'vazio'
+void finalizar(); // void nao retorna nada, é o 'vazio'
 
 int main() {
     setlocale(LC_ALL, ""); 
     
-    const char *user = "adm";
-     // conts pq n altera, char declara o ponteiro (string), user é o nome da var qeu armazena a string,"adm": String literal atribuída à variável user. 
+    const char *user = "adm"; // conts pq n altera, char declara o ponteiro (string), user é o nome da var qeu armazena a string,"adm": String literal atribuída à variável user.
     const char *pass = "12345";
     
     login(user, pass); // user é o primeiro argumento
@@ -53,10 +47,7 @@ void login(const char *user, const char *pass) {
     int tries = 3; //var tentativas começa em 3
 
     while (tries > 0) {
-        if (auth(user, "Usuário:\n") && auth(pass, "Senha:\n")) {  // AQUI A MENSAGEM
-            //auth com user e a string "Usuário:\n".
-            // && é e
-            //auth verifica se o usuário é válido.
+        if (auth(user, "Usuário:\n") && auth(pass, "Senha:\n")) { // AQUI A MENSAGEM //auth com user e a string "Usuário:\n". // && é e //auth verifica se o usuário é válido.
             printf("Bem-vindo!\n"); 
             return;
         }
@@ -171,7 +162,7 @@ void showCarrinho() {
     printf("\nCarrinho de compras:\n");
     for (int i = 0; i < nProd; i++) { //loop pra lista de itens
         printf("Produto %d: %s - ", i + 1, carrinho[i].nome); //contagem dos produtos comece em 1.
-        if (carrinho[i].peso > 0)c//contagem dos produtos comece em 1.
+        if (carrinho[i].peso > 0) //contagem dos produtos comece em 1.
             printf("Peso: %.2f kg, Preço por kg: R$%.2f, Total: R$%.2f\n", carrinho[i].peso, carrinho[i].pKg, carrinho[i].total);
         else
             printf("Total: R$%.2f\n", carrinho[i].total);
